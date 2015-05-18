@@ -26,6 +26,8 @@
     "sequelize": "^2.1.0",
     "sqlite3": "~2.2.0",
     "method-override": "~2.3.3",
-    "express-session": "~1.11.2"
+    "express-session": "~1.11.2",
+    "https": "~1.0.0",
+    "fs": "0.0.2"
   }
 }
