@@ -21,6 +21,8 @@ exports.create = function(req, res) {
 
 	var login = req.body.login;
 	var password = req.body.password;
+	var tiempo = Date.now();
+	console.log("Tiempo al guardar:" + tiempo + "\n");
 
 	var userController = require('./user_controller');
 	userController.autenticar(login, password, function(error, user) {
@@ -31,12 +33,41 @@ exports.create = function(req, res) {
  	return;
  }
 
- // Crear req.session.user y guardar campos id y username
+ // Crear req.session.user y guardar campos id, username y tiempo
  // La sesión se define por la existencia de: req.session.user
- req.session.user = {id:user.id, username:user.username};
+ req.session.user = {id:user.id, username:user.username, tiempo:tiempo};
 
  res.redirect(req.session.redir.toString());// redirección a path anterior a login
 });
+};
+
+// Auto-logout de la sesion cuando se han cumplido 2 minutos
+exports.autologout = function(req, res, next){
+	console.log("Entro en autologout   \n\n");
+   if(req.session.user){
+	var tiempoActual = Date.now();
+
+	var tiempoInicial = req.session.user.tiempo;
+		console.log("Antes de log   \n\n");
+		console.log("Tiempo:" + tiempoInicial + "\n");
+		console.log("Tiempo:" + tiempoActual + "\n");
+
+	var transcurrido = tiempoActual - tiempoInicial;
+	console.log("Tiempo transcurrido:" + transcurrido + "\n");
+
+	if(transcurrido/1000 < 120){  //??¿ ira a destroy o al sigyuiente MW de index?¿?
+		req.session.user.tiempo = tiempoActual;
+		console.log("log OK   \n\n");
+		next();
+
+	} else {
+		console.log("Su sesión ha expirado   \n\n");
+		 res.redirect('/logout',{});
+         }
+    }else{
+	next();
+    }
+
 };
 
 // DELETE /logout -- Destruir sesion
