@@ -1,5 +1,7 @@
 var express = require('express');
+var multer  = require('multer');
 var router = express.Router();
+
 
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
@@ -43,9 +45,9 @@ router.get('/quizes',                     sessionController.autologout, quizCont
 router.get('/quizes/:quizId(\\d+)',        sessionController.autologout, quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', sessionController.autologout, quizController.answer);
 router.get('/quizes/new', sessionController.loginRequired, sessionController.autologout, quizController.new);
-router.post('/quizes/create', sessionController.loginRequired, sessionController.autologout, quizController.create);
+router.post('/quizes/create', sessionController.loginRequired, multer({ dest: './public/media/'}) ,sessionController.autologout, quizController.create);
 router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizController.ownershipRequired,sessionController.autologout ,quizController.edit);
-router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired,quizController.ownershipRequired,sessionController.autologout  ,quizController.update);
+router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired,quizController.ownershipRequired,multer({ dest: './public/media/'}),sessionController.autologout  ,quizController.update);
 router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired,quizController.ownershipRequired,sessionController.autologout ,quizController.destroy);
 
 // Definición de rutas de comentarios
