@@ -36,8 +36,15 @@ exports.ownershipRequired = function(req, res, next){
 
 
   // GET /quizes
-  exports.index = function(req, res) {
-    models.Quiz.findAll().then( function(quizes) {
+ // GET /users/:userId/quizes
+exports.index = function(req, res) {  
+  var options = {};
+   if(req.user){
+     options.where = {UserId: req.user.id}
+   } 
+  
+  models.Quiz.findAll(options).then(
+  function(quizes) {
       if (req.query.search !== undefined){
         console.log("Primero: "+req.query.search);
         req.query.search = req.query.search.replace(/^| |$/g,'%');
