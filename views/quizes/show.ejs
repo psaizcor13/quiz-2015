@@ -18,5 +18,13 @@
 			<p>- <%=quiz.Comments[index].texto%>
 			<a href="/quizes/<%= quiz.id %>/comments/<%=quiz.Comments[index].id%>/publish"><button>Publicar</button></a></p>
 	<%}%>
- <%}%> 
-
+ <%}%>
+<% if(session.user){%>
+<p><strong>Favorito:</strong></p>
+<a href="/user/<%=session.user.id%>/favourites/<%= quiz.id %>"><button>Crear pregunta</button></a>
+<a href="/user/<%=session.user.id%>/favourites/<%= quiz.id %>?"><button>Crear pregunta</button></a>
+//<form method="post" action="/user/<%=session.user.id%>/favourites/<%= quiz.id %>?_method=put">
+//<input type="submit" value="Añadir Favorito"/>
+//<form method="post" action="/user/<%=session.user.id%>/favourites/<%= quiz.id %>?_method=delete">
+//<input type="submit" value="Quitar Favorito"/>
+ <%}%>
